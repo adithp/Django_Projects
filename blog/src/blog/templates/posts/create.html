@@ -1,0 +1,66 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block content %}
+        <section id="edit-post-home">
+            <section class="wrapper">   
+                {% include 'web/includes/header.html' %}
+                <section class="spotlight">
+                    <h3>Create new post</h3>
+                    <form action="" method="post" enctype="multipart/form-data" class="ajax redirect">
+                         {% csrf_token %} 
+                            <div class="form-field">
+                                <label for="{{form.title.id_for_label}}" class="subheads" >
+                                    {{form.title.label}}
+                                </label>
+                                {{form.title}}
+                            </div>
+                            <div class="form-field" for="{{form.description.id_for_label}}">
+                                <label class="subheads">
+                                    {{form.description.label}}
+                                </label>
+                                <div class="description">
+                                    <div class="editor" data-field-id="id_description" style="display: inline-block;">
+                                        {{form.description}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label class="subheads" for="{{form.short_description.id_for_label}}">
+                                    {{form.short_description.label}}
+                                </label>
+                                {{form.short_description}}
+                            </div>
+                            <div class="form-field">
+                                <label class="subheads" for="{{form.categories.id_for_label}}">
+                                    {{form.categories.label}}
+                                </label>
+                                {{form.categories}}
+                            </div>
+                            <div class="form-field">
+                                <label for="{{form.time_to_read.id_for_label}}" class="subheads" >
+                                    {{form.time_to_read.label}}
+                                </label>
+                                {{form.time_to_read}}
+                            </div>
+                            <div class="form-field">
+                                <label for="{{form.featured_image.id_for_label}}" class="subheads" >
+                                    {{form.featured_image}}
+                                </label>
+
+                            </div>
+                            <div class="form-field"></div>
+                                <label class="checkbox">
+                                    {{form.is_draft}}
+                                    {{form.is_draft.label}}
+                                </label>
+                            </div>
+                            <div class="form-field">
+                                <input type="submit" value="Submit" />
+                            </div>
+                    </form>
+                    {{form.media}}
+                </section>
+            </section>
+        </section>
+        
+ {% endblock %}

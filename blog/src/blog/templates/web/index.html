@@ -12,7 +12,7 @@
                         <ul class="posts">
                             {% for post in instances %}
                             <li>
-                                <a href="./post.html">
+                                <a href="{% url 'web:post' id=post.id %}">
                                     <div class="blog-image">
                                         <img
                                             src="{{post.featured_image.url}}"
@@ -23,10 +23,10 @@
                                         <div class="date">
                                             <h4 class="name">{{post.author.name}}</h4>
                                             <div class="round"></div>
-                                            <span> {{post.published_date}} </span>
+                                            <span> {{post.published_date|date:"D d-M-Y"}} </span>
                                         </div>
                                         <h3 class="head">
-                                            {{post.title}}
+                                            {{post.title|truncatewords:10}}
                                         </h3>
                                         
                                             <h6>Comments True</h6>
@@ -38,7 +38,7 @@
                                 </a>
                                 <div class="bottom">
                                 {% for tag in post.categories.all %}
-                                    <a href="#" class="design one"> {{tag.title}} </a>
+                                    <a href="#" class="design {% cycle 'one' 'two' 'three'  %} "> {{tag.title}} </a>
                                 {% endfor %}
                                 </div>
                             </li>             

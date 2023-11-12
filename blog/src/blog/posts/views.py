@@ -1,13 +1,13 @@
 import datetime
 import json
 
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
 from posts.forms import PostForm
-from posts.models import Author,Cateagory
-from main.functions import generate_form_errors
+from posts.models import Author,Cateagory,Post
+from main.functions import generate_form_errors,paginate_instances
 
 
 
@@ -60,3 +60,49 @@ def create_post(request):
             "form":form
         }
         return render(request,"posts/create.html",context=context)
+
+
+
+@login_required(login_url="/users/login/")
+def my_posts(request):
+    posts =Post.objects.filter(author__user=request.user, is_deleted=False)
+    instances = paginate_instances(request,posts)
+    context = {
+        "title" : "My Posts",
+        "instances":instances
+    }
+    return render(request,"posts/my-posts.html",context=context)
+
+
+
+
+@login_required(login_url="/users/login/")
+def delete_post(request,id):
+    instance = get_object_or_404(Post,id=id)
+    instance.is_deleted = True
+    instance.save()
+    
+    response_data = {
+        "title" : "Succsecfully Deleted",
+        "message" : "post deleted succsesfully",
+        "status" : "success",
+    }
+    
+    return HttpResponse(json.dumps(response_data),content_type="application/json")
+
+
+
+
+@login_required(login_url="/users/login/")
+def draft_post(request,id):
+    instance = get_object_or_404(Post,id=id)
+    instance.is_draft = not instance.is_draft
+    instance.save()
+    
+    response_data = {
+        "title" : "Succsecfully changed",
+        "message" : "post update succsesfully",
+        "status" : "success",
+    }
+    
+    return HttpResponse(json.dumps(response_data),content_type="application/json")

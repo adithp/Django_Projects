@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.http.response import HttpResponse
 from main.functions import paginate_instances
 
@@ -39,3 +39,13 @@ def index(request):
         
     }
     return render(request,'web/index.html',context=context)
+
+def post(request,id):
+    print(id)
+    instance =get_object_or_404(Post.objects.filter(id=id))
+    context = {
+        "instance" : instance
+    }
+    
+    
+    return render(request,'web/post.html',context=context)

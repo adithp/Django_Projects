@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from posts.forms import PostForm
 from posts.models import Author,Cateagory,Post
 from main.functions import generate_form_errors,paginate_instances
+from main.decorators import allow_self
 
 
 
@@ -77,6 +78,7 @@ def my_posts(request):
 
 
 @login_required(login_url="/users/login/")
+@allow_self
 def delete_post(request,id):
     instance = get_object_or_404(Post,id=id)
     instance.is_deleted = True
@@ -94,6 +96,7 @@ def delete_post(request,id):
 
 
 @login_required(login_url="/users/login/")
+@allow_self
 def draft_post(request,id):
     instance = get_object_or_404(Post,id=id)
     instance.is_draft = not instance.is_draft
@@ -106,3 +109,51 @@ def draft_post(request,id):
     }
     
     return HttpResponse(json.dumps(response_data),content_type="application/json")
+
+
+
+@login_required(login_url="/users/login/")
+@allow_self
+def edit_post(request,id):
+    instance = get_object_or_404(Post,id=id)
+    
+    if request.method == 'POST':
+        form =PostForm(request.POST,request.FILES,instance=instance)
+        if form.is_valid():
+            tags = form.cleaned_data['categories']
+            instance = form.save(commit=False)
+            instance.save()
+            instance.categories.clear()
+            tags_list = tags.split(",")
+            for tag in tags_list:
+               category,created = Cateagory.objects.get_or_create(title=tag.strip())
+               instance.categories.add(category)
+            
+            response_data = {
+                "title": "Succsesfully Submited",
+                "message": "Succsesfully Submited",
+                "status": "success",
+                "redirect":"yes",
+                "redirect_url":"/"
+            }
+        else:
+            error_message = generate_form_errors(form)
+            response_data = {
+                "title": "Form Validation Error",
+                "message": str(error_message),
+                "status": "error",
+                "stable":"yes"
+            }
+        return HttpResponse(json.dumps(response_data),content_type="application/json")
+    else:
+        category_string = ""
+        for category in instance.categories.all():
+            category_string += f"{category.title},"
+            
+            
+        form = PostForm(instance=instance,initial={"categories":category_string[:-1]})
+        context = {
+            "title":"Create New Post",
+            "form":form
+        }
+        return render(request,"posts/create.html",context=context)

@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django.contrib.postgres",
     "ckeditor",
     "posts"
 ]
@@ -59,9 +60,12 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+      'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'blog',
+        'USER':'postgres',
+        'PASSWORD':'adithk568',
+        'HOST':'localhost',
     }
 }
 

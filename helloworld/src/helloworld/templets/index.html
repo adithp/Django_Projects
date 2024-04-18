@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% load static %}
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+	<script src="{% static 'js/script.js' %}"></script>
+	<title>{{title}}</title>
+</head>
+<body>
+	<h1>Hello {{name}} Your age is {{age}}</h1>
+	<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi incidunt laudantium fuga exercitationem expedita itaque, repellat aperiam voluptates commodi nesciunt repellendus, dolorem deleniti et laborum ratione facere, eum dolores necessitatibus.</p>
+	<img src="{% static 'images/image.jpg' %}" alt="hello" width="200px" />
+	<img src="{% static 'images/image.jpg' %}" width="200px" alt="hello" />
+	<a href="{% url 'web:about' %}">about</a>
+</body>
+</html>
